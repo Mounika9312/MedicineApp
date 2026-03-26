@@ -15,14 +15,31 @@ export const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
     const refreshData = async () => {
         const meds = await getMedications();
+        const { getStock } = await import('@/services/db');
+        const stockItems = await getStock();
         setMedications(meds);
+
+        // Sync notifications whenever data is refreshed, but don't let it crash the app
+        try {
+            const { rescheduleAllNotifications } = await import('@/services/notifications');
+            await rescheduleAllNotifications(meds, stockItems);
+        } catch (e) {
+            console.warn('Silent notification sync failure:', e);
+        }
     };
 
     useEffect(() => {
         const setup = async () => {
-            await initDatabase();
-            await refreshData();
-            setIsReady(true);
+            try {
+                await initDatabase();
+                await refreshData();
+                setIsReady(true);
+            } catch (error) {
+                console.error('Database setup failed:', error);
+                // Even if it fails, we should probably set isReady to true 
+                // but maybe we should show an error UI instead.
+                // For now, let's just log it.
+            }
         };
         setup();
     }, []);

@@ -11,13 +11,17 @@ export default function TabLayout() {
         <Tabs
             screenOptions={{
                 tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-                headerShown: true,
+                headerShown: false,
                 tabBarStyle: {
                     backgroundColor: colorScheme === 'dark' ? '#121212' : '#FFFFFF',
                     borderTopWidth: 0,
-                    elevation: 0,
-                    height: 60,
-                    paddingBottom: 10,
+                    elevation: 12,
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: -4 },
+                    shadowOpacity: 0.1,
+                    shadowRadius: 10,
+                    height: 70,
+                    paddingBottom: 15,
                 },
                 headerStyle: {
                     backgroundColor: colorScheme === 'dark' ? '#121212' : '#FFFFFF',
